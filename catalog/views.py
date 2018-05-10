@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from .models import Product
 from .serializers import ProductSerializer
 
-def ProductList(APIView):
+class ProductList(APIView):
   def get(self, request, format=None):
     products = Product.objects.all()
     serializer = ProductSerializer(products, many=True)
