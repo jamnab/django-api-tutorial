@@ -4,8 +4,8 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from .models import Product
-from .serializers import ProductSerializer
+from .models import Product, Review
+from .serializers import ProductSerializer, ReviewSerializer
 from .permissions import IsAdminOrReadOnly
 
 class ProductList(generics.ListCreateAPIView):
@@ -17,3 +17,13 @@ class ProductDetail(generics.RetrieveDestroyAPIView):
   queryset = Product.objects.all()
   serializer_class = ProductSerializer
   permission_classes = (IsAdminOrReadOnly, )
+
+class ReviewList(generics.ListCreateAPIView):
+  queryset = Product.objects.all()
+  serializer_class = ProductSerializer
+  permission_classes = (IsAdminOrReadOnly, )
+
+  def perform_create(self, serializer):
+    serializer.save(
+      created_by=self.request.user,
+      product_id=self.kwargs['pk'])
